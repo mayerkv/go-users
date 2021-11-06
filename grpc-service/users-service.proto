@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option go_package = "github.com/mayerkv/go-users/grpc-service;grpc_service";
+
+service UsersService {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
+}
+
+message CreateUserRequest {
+  string email = 1;
+  string password = 2;
+  UserRole role = 3;
+}
+
+message CreateUserResponse {}
+
+enum UserRole {
+  ROLE_USER = 0;
+  ROLE_ADMIN = 1;
+}
