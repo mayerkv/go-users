@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: users
-          image: go-users:latest
+          image: kvmayer/go-users:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 9090

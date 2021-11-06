@@ -10,5 +10,5 @@ protoc --go_out=. --go_opt=paths=source_relative \
 ```
 
 ```shell
-docker build -t go-users:latest .
+docker build -t kvmayer/go-users:latest .
 ```
