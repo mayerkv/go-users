@@ -9,12 +9,18 @@ import (
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"os"
 )
 
 func main() {
+	authAddr := os.Getenv("AUTH_ADDR")
+	if authAddr == "" {
+		authAddr = "auth:9090"
+	}
+
 	var opts []grpc.DialOption
 	opts = append(opts, grpc.WithInsecure())
-	conn, err := grpc.Dial("localhost:9090", opts...)
+	conn, err := grpc.Dial(authAddr, opts...)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,7 +38,7 @@ func main() {
 }
 
 func runGrpcServer(srv grpc_service.UsersServiceServer) error {
-	lis, err := net.Listen("tcp", ":9091")
+	lis, err := net.Listen("tcp", ":9090")
 	if err != nil {
 		return err
 	}
