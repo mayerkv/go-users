@@ -4,6 +4,8 @@ import (
 	"context"
 	"github.com/mayerkv/go-auth/grpc-service"
 	"github.com/mayerkv/go-users/domain"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 	"time"
 )
 
@@ -11,12 +13,13 @@ type AuthService struct {
 	authServiceClient grpc_service.AuthServiceClient
 }
 
-func NewAuthService(authServiceClient grpc_service.AuthServiceClient) *AuthService {
+func NewAuthService(authServiceClient grpc_service.AuthServiceClient) domain.AuthService {
 	return &AuthService{authServiceClient: authServiceClient}
 }
 
-func (s *AuthService) CreateAccount(email, password, userId string, role domain.UserRole) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+func (s *AuthService) CreateAccount(ctx context.Context, email, password, userId string, role domain.UserRole) error {
+	md, _ := metadata.FromIncomingContext(ctx)
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
 	var accountRole grpc_service.AccountRole
@@ -34,7 +37,7 @@ func (s *AuthService) CreateAccount(email, password, userId string, role domain.
 		Role:     accountRole,
 	}
 
-	_, err := s.authServiceClient.CreateAccount(ctx, req)
+	_, err := s.authServiceClient.CreateAccount(ctx, req, grpc.Header(&md))
 
 	return err
 }

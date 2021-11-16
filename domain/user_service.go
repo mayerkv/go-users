@@ -1,6 +1,9 @@
 package domain
 
-import "errors"
+import (
+	"context"
+	"errors"
+)
 
 var (
 	ErrUserAlreadyExists = errors.New("user already exists")
@@ -15,7 +18,7 @@ func NewUserService(userRepository UserRepository, authService AuthService) *Use
 	return &UserService{userRepository: userRepository, authService: authService}
 }
 
-func (s *UserService) CreateUser(email, password string, role UserRole) (*User, error) {
+func (s *UserService) CreateUser(ctx context.Context, email, password string, role UserRole) (*User, error) {
 	u, err := s.userRepository.FindByEmail(email)
 	if err != nil {
 		return nil, err
@@ -30,7 +33,7 @@ func (s *UserService) CreateUser(email, password string, role UserRole) (*User, 
 		return nil, err
 	}
 
-	if err := s.authService.CreateAccount(email, password, user.Id, user.Role); err != nil {
+	if err := s.authService.CreateAccount(ctx, email, password, user.Id, user.Role); err != nil {
 		s.userRepository.Delete(user)
 		return nil, err
 	}

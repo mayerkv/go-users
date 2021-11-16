@@ -14,7 +14,7 @@ func NewUsersServiceServerImpl(userService *domain.UserService) UsersServiceServ
 }
 
 func (s *UsersServiceServerImpl) CreateUser(ctx context.Context, request *CreateUserRequest) (*CreateUserResponse, error) {
-	_, err := s.userService.CreateUser(request.Email, request.Password, mapRole(request.Role))
+	_, err := s.userService.CreateUser(ctx, request.Email, request.Password, mapRole(request.Role))
 	if err != nil {
 		return nil, err
 	}
