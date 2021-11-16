@@ -17,7 +17,7 @@ spec:
       containers:
         - name: users
           image: kvmayer/go-users:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 9090
 ---
@@ -33,3 +33,4 @@ spec:
     - protocol: TCP
       port: 9090
       targetPort: 9090
+      name: grpc
